@@ -14,7 +14,7 @@ class ContactController @Inject()(cc: ControllerComponents, service: ContactServ
 
   implicit val contactWrites: OWrites[Contact] = Json.writes[Contact]
 
-  def getById(id: String): Action[AnyContent] = Action {
+  def getById(id: String) = Action {
     service.getExistingById(id) match {
       case Success(contact)                    => Ok(Json.toJson(contact).toString)
       case Failure(e: EntityNotFoundException) => NotFound(Json.toJson(Map("message" -> e.getMessage)).toString)
@@ -23,11 +23,11 @@ class ContactController @Inject()(cc: ControllerComponents, service: ContactServ
     }
   }
 
-  def listAll: Action[AnyContent] = Action {
+  def listAll = Action {
     Ok(Json.toJson(service.getAll).toString)
   }
 
-  def create: Action[AnyContent] = Action { implicit request =>
+  def create = Action { implicit request =>
     val args = request.body.asMultipartFormData.get.dataParts.map { case (k, v) => (k, v.head) }
     Ok(Json.toJson(
       service.create(
